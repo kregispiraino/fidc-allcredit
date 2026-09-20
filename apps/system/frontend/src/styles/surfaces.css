@@ -1,0 +1,8 @@
+:root{--success:#2f8f72;--warning:#c48a24;--danger:#c65b64}
+.soft-badge{padding:5px 8px;border-radius:999px;background:var(--surface-2);font-size:9px;color:var(--muted);font-weight:650}.soft-badge.pending{color:var(--warning);background:rgba(196,138,36,.1)}
+html[data-theme="dark"],html[data-theme="dark"] body,html[data-theme="dark"] .app-shell,html[data-theme="dark"] .main-content{background:var(--bg);color:var(--text)}
+html[data-theme="dark"] .sidebar{background:#151515!important;box-shadow:0 0 0 1px var(--line),0 10px 28px rgba(0,0,0,.34)}
+html[data-theme="dark"] .sidebar-panel,html[data-theme="dark"] .sidebar-top,html[data-theme="dark"] .section-content,html[data-theme="dark"] .panel-bottom{background:#151515}
+html[data-theme="dark"] .sidebar-panel{box-shadow:none}
+html[data-theme="dark"] .sidebar::before{content:"";position:absolute;inset:0;border-radius:inherit;background:#151515;z-index:-1;pointer-events:none}
+

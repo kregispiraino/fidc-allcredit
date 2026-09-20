@@ -1,0 +1,38 @@
+/* Componentes de select e data reaproveitados do Askora V2. */
+.filter-select{width:100%;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--text);cursor:pointer;font-size:10px;text-align:left;transition:border-color var(--ease),background var(--ease)}
+.filter-select:hover,.filter-select[aria-expanded="true"]{border-color:color-mix(in srgb,var(--cyan) 48%,var(--line));background:var(--surface)}
+.filter-select svg{width:13px;height:13px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 140ms ease}
+.filter-select[aria-expanded="true"] svg{transform:rotate(180deg)}
+.filter-menu{position:absolute;z-index:4;left:0;right:0;top:calc(100% + 5px);padding:5px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:0 10px 24px rgba(20,30,32,.12);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity 120ms ease,transform 120ms ease}
+.filter-menu.open{opacity:1;transform:translateY(0);pointer-events:auto}
+.filter-option{width:100%;height:30px;padding:0 8px;border-radius:6px;display:flex;align-items:center;background:transparent;color:var(--muted);cursor:pointer;font-size:10px;text-align:left}
+.filter-option:hover,.filter-option.active{background:var(--surface-2);color:var(--text)}
+.standard-select{position:relative;width:100%;min-width:0}
+.standard-select-native{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;padding:0!important;border:0!important;clip-path:inset(50%)}
+.standard-select-trigger>span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-width:0}
+.standard-select-trigger svg{flex-shrink:0}
+.standard-select-trigger.standard-select-avatar{width:32px;min-width:32px;height:32px;min-height:32px;padding:0;border-radius:50%;background:#20282a;color:#fff;display:grid;place-items:center;justify-content:center;gap:0;font-size:10px;font-weight:750;text-align:center}
+.standard-select-avatar svg{display:none}
+.standard-select-avatar span{color:inherit}
+@media(max-width:767px){.standard-select-trigger.standard-select-avatar{width:44px;min-width:44px;height:44px;min-height:44px}}
+.standard-select-trigger:focus-visible,.standard-select-menu .filter-option:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+.standard-select-menu .filter-option:has(.standard-select-option-copy){display:flex;align-items:flex-start;gap:7px;text-align:left;line-height:1.3}.standard-select-option-copy{display:grid;gap:2px;min-width:0}.standard-select-option-copy strong{font:inherit;font-weight:650;color:inherit}.standard-select-option-copy small{font-size:9px;font-weight:450;line-height:1.35;color:var(--muted);white-space:normal}.standard-select-option-mark{flex:0 0 auto}
+.standard-select-trigger:disabled{opacity:.45;cursor:not-allowed}
+.standard-select-menu.filter-menu{position:fixed;right:auto;z-index:300;max-height:260px;overflow-y:auto;transform:none}
+.standard-select-menu .filter-option{height:auto;min-height:30px;white-space:normal;padding:7px 8px;flex-shrink:0}
+.standard-select-menu .filter-option:disabled{opacity:.4;cursor:not-allowed}
+.standard-select-menu [hidden]{display:none!important}
+.standard-select-search{position:sticky;top:0;z-index:1;background:var(--surface);padding:2px 0 7px;margin-bottom:3px;border-bottom:1px solid var(--line)}
+.standard-select-search input{box-sizing:border-box;width:100%;min-width:0;min-height:32px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--text);padding:6px 9px;font:inherit;font-size:11px;outline:none}
+.standard-select-search input:focus{border-color:var(--cyan)}
+.standard-select-empty{padding:10px 8px;font-size:11px;color:var(--muted)}
+@media(max-width:767px){.standard-select-search input{min-height:40px;font-size:16px}}
+.form-select-wrap:has(.standard-select)::after{display:none}
+.standard-date-field{position:relative;display:flex;align-items:center;width:100%;min-width:0;color:var(--muted)}
+.standard-date-field input[data-date-proxy]{width:100%;min-width:0;padding-right:34px!important;font-variant-numeric:tabular-nums}
+.standard-date-picker{position:absolute;right:4px;display:grid;place-items:center;width:28px;height:28px;padding:5px;border:0;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer}
+.standard-date-picker svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.standard-date-picker:hover:not(:disabled){background:var(--surface-2);color:var(--text)}
+.standard-date-picker:disabled{opacity:.45;cursor:default}
+.standard-date-picker:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+input.standard-input-native{position:absolute!important;width:1px!important;min-width:0!important;height:1px!important;padding:0!important;border:0!important;opacity:0!important;pointer-events:none;clip-path:inset(50%)}

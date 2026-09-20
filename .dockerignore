@@ -1,0 +1,13 @@
+**
+!package.json
+!package-lock.json
+!apps/
+!apps/**
+!database/
+!database/migrations/
+!database/migrations/**
+!database/migrate.js
+!scripts/
+!scripts/create-access.js
+!scripts/backup.js
+!scripts/entrypoint.sh

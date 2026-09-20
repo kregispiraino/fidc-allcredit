@@ -1,0 +1,27 @@
+{
+  "name": "allcredit-fidc",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node apps/system/backend/src/server.js",
+    "dev": "node --watch apps/system/backend/src/server.js",
+    "db:migrate": "node database/migrate.js",
+    "db:seed": "node database/seed.js",
+    "test": "node --test tests/acessos.test.js tests/workflow.test.js tests/migrations.test.js tests/architecture.test.js tests/saldos.test.js tests/importacao-extratos.test.js tests/importacao-qprof.test.js tests/extrato-spreadsheet.test.js tests/production.test.js",
+    "test:ui": "node --test tests/ui.test.js",
+    "start:env": "node --env-file-if-exists=.env apps/system/backend/src/server.js",
+    "access:create": "node scripts/create-access.js",
+    "db:backup": "node scripts/backup.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pdfkit": "^0.20.2",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.0"
+  }
+}

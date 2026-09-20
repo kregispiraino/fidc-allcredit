@@ -1,0 +1,16 @@
+.extrato-account-filter{min-width:120px;max-width:min(260px,45vw)}
+.extrato-account-filter .standard-select-trigger{background:var(--action-bg);color:var(--action-text);border-color:var(--action-bg);height:28px;min-height:28px;padding:0 10px;font-size:11px;font-weight:650}
+.extrato-account-filter .standard-select-trigger:hover:not(:disabled){background:var(--action-bg);filter:brightness(1.1)}
+.extrato-account-filter .standard-select-trigger:disabled{opacity:.5;cursor:not-allowed}
+.standard-data-table.extrato-table .data-table{table-layout:fixed;width:100%;min-width:1240px}
+.extrato-table .data-table th,.extrato-table .data-table td{padding-left:8px;padding-right:8px}
+.extrato-table .data-table .row-actions-column{width:95px;min-width:95px}
+.extrato-table .compact-row-actions{min-width:0;gap:3px}
+.standard-data-table.extrato-table td .cell-main,.standard-data-table.extrato-table td .cell-sub{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.standard-data-table.extrato-table td .inline-cell-control,.standard-data-table.extrato-table td input:not(.standard-input-native),.standard-data-table.extrato-table td .standard-select,.standard-data-table.extrato-table td .standard-number-field,.standard-data-table.extrato-table td .standard-date-field,.standard-data-table.extrato-table td textarea.standard-long-text{width:100%;min-width:0;max-width:100%}
+.standard-data-table.extrato-table td .standard-select-trigger{padding-left:6px;padding-right:6px;gap:4px}
+.standard-data-table.extrato-table td .standard-select-trigger>span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.standard-data-table.extrato-table td:has(textarea.standard-long-text){width:auto;max-width:none}
+.extrato-table [data-column-key=data]{font-variant-numeric:tabular-nums}
+@media(max-width:760px){.extrato-account-filter{min-width:104px;max-width:45vw}.extrato-table .data-table{min-width:1260px}.extrato-table .data-table th:nth-child(3){width:150px!important}.extrato-table td[data-column-key=data] input[data-date-proxy]{font-size:12px}.extrato-table .data-table .row-actions-column{width:110px;min-width:110px}}
+

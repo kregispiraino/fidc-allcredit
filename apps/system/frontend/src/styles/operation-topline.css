@@ -1,0 +1,48 @@
+/* Askora operational-kanban + operation-multipage: domain tabs and stats. */
+.task-topline{min-width:0;margin-bottom:16px;align-items:center;gap:8px}
+.task-view-switch{height:36px;padding:3px;border:1px solid var(--line);border-radius:8px;background:var(--surface);display:flex;align-items:center;gap:2px;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+.task-view-button{display:flex;align-items:center;height:28px;width:auto;padding:0 9px;border:0;border-radius:6px;color:var(--muted);cursor:pointer;font-size:10px;font-weight:680;gap:6px;white-space:nowrap}
+.task-view-button:hover,.task-view-button.active{color:var(--text);background:var(--surface-2)}
+.task-view-button.active{box-shadow:inset 0 0 0 1px var(--line)}
+.operation-topline{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:'views space stats'}
+.operation-topline .task-topline-left,.operation-topline .operation-topline-right{display:contents}
+.operation-topline .task-view-switch{grid-area:views}
+.operation-topline svg.operation-stroke{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.operation-topline .task-overview{grid-area:stats;display:flex;flex-wrap:nowrap;width:auto;max-width:none;margin:0;gap:6px;overflow:hidden}
+.operation-topline .task-stat{display:flex;align-items:center;flex:1 1 auto;width:auto;min-width:105px;height:36px;min-height:36px;border-radius:8px;padding:0 9px;gap:10px;box-shadow:none}
+.operation-topline .task-stat span{font-size:9px;font-weight:500;white-space:nowrap}
+.operation-topline .task-stat strong{font-size:12px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
+#pageActions:empty,#headerTabs[aria-hidden=true]{display:none}
+.standard-data-table .table-error{margin:0;padding:10px 12px;background:color-mix(in srgb,var(--danger) 6%,var(--surface));border-top:1px solid var(--line)}
+.data-table td.inline-edit-cell{overflow:visible;min-width:155px}
+.data-table td .standard-select-trigger{font-size:11px}
+.standard-table-filter.batch-edit-card .table-batch-fields{display:grid;grid-template-columns:1fr;gap:14px;margin:15px 0}
+.standard-table-filter.batch-edit-card .form-field{min-width:0}
+@media(max-width:1000px){
+  .operation-topline{grid-template-columns:auto minmax(0,1fr);grid-template-areas:'views stats'}
+  .operation-topline .task-stat{min-width:0;gap:6px;padding:0 7px}
+  .operation-topline .task-stat strong{font-size:11px}
+}
+@media(max-width:760px){
+  .operation-topline{grid-template-columns:minmax(0,1fr);grid-template-areas:'views' 'stats';gap:8px}
+  .operation-topline .task-view-switch{height:40px;width:100%;min-width:0;overflow-x:auto;overflow-y:hidden}
+  .operation-topline .task-view-button{flex:1 0 auto;justify-content:center;height:32px;font-size:10px;padding:0 7px;gap:4px}
+  .operation-topline .task-overview{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);width:100%;overflow:visible;gap:6px}
+  .operation-topline .task-overview:empty{display:none}
+  .operation-topline .task-stat{flex-direction:column;align-items:flex-start;justify-content:center;height:49px;min-width:0;padding:7px 8px;gap:5px}
+  .operation-topline .task-stat strong{margin:0;font-size:11px}
+}
+
+/* Keep a record in the same place while its cells switch between text and fields. */
+.standard-data-table.stable-table-layout .data-table{table-layout:fixed}
+.standard-data-table.stable-table-layout .data-table td{min-width:0;max-width:none;overflow:hidden}
+.standard-data-table.stable-table-layout td .inline-cell-control,
+.standard-data-table.stable-table-layout td input:not(.standard-input-native),
+.standard-data-table.stable-table-layout td .standard-number-field,
+.standard-data-table.stable-table-layout td .standard-date-field,
+.standard-data-table.stable-table-layout td .standard-select,
+.standard-data-table.stable-table-layout td textarea.standard-long-text{width:100%;min-width:0;max-width:100%}
+.standard-data-table.stable-table-layout td .standard-select-trigger>span,
+.standard-data-table.stable-table-layout td .cell-main,
+.standard-data-table.stable-table-layout td .cell-sub{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.standard-data-table .table-scroll{overflow-anchor:none}

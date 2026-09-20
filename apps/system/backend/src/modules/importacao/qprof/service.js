@@ -1,0 +1,36 @@
+import { Worker } from 'node:worker_threads';
+import { assert, AppError } from '../../../shared/errors.js';
+import { transaction } from '../../../infrastructure/database/connection.js';
+export const qprofBase=db=>db.prepare('SELECT versao,arquivo,quantidade,updated_at FROM importacao_qprof_base WHERE id=1').get();
+export function qprofFilterOptions(db){
+  return Object.fromEntries(['carteira','carteira_interna'].map(column=>[column,db.prepare(`SELECT DISTINCT ${column} valor FROM importacao_qprof_titulos WHERE ${column}<>'' ORDER BY ${column}`).all().map(row=>row.valor)]));
+}
+export function replaceQprof(db,rows,{filename,versao}){
+  return transaction(db,()=>{
+    assert(Number.isSafeInteger(versao)&&versao===qprofBase(db).versao,'A base Qprof foi atualizada por outra importação. Recarregue a página e selecione o arquivo novamente.',409);
+    // Invalidate open compositions before clearing source references. Snapshots remain intact.
+    db.exec(`UPDATE workflow_rastreio_transferencias SET versao=versao+1 WHERE id IN
+      (SELECT transferencia_id FROM workflow_rastreio_itens WHERE qprof_titulo_id IS NOT NULL);
+      DELETE FROM importacao_qprof_titulos;`);
+    const insert=db.prepare('INSERT INTO importacao_qprof_titulos(numero,cedente,sacado,valor,data_liquidacao,carteira,carteira_interna) VALUES(?,?,?,?,?,?,?)');
+    for(const row of rows)insert.run(row.numero,row.cedente,row.sacado,row.valor,row.data_liquidacao,row.carteira,row.carteira_interna);
+    db.prepare('UPDATE importacao_qprof_base SET versao=versao+1,arquivo=?,quantidade=?,updated_at=CURRENT_TIMESTAMP WHERE id=1').run(filename,rows.length);
+    return qprofBase(db);
+  });
+}
+export async function importQprof(db,payload){
+  const {filename,content,versao}=payload;
+  assert(typeof filename==='string'&&filename.length<=200&&/\.xlsx?$/i.test(filename),'Envie uma planilha .xlsx ou .xls.');
+  assert(typeof content==='string'&&content.length<=Math.ceil(25*1024*1024/3)*4&&/^[A-Za-z0-9+/]+={0,2}$/.test(content),'Arquivo inválido ou maior que 25 MB.');
+  const buffer=Buffer.from(content,'base64');
+  assert(buffer.length>0&&buffer.length<=25*1024*1024&&buffer.toString('base64')===content,'Arquivo inválido ou maior que 25 MB.');
+  assert(versao===qprofBase(db).versao,'A base Qprof foi atualizada. Recarregue a página antes de importar.',409);
+  const rows=await new Promise((resolve,reject)=>{
+    const worker=new Worker(new URL('./parser-worker.js',import.meta.url),{workerData:buffer,execArgv:[]});
+    const timeout=setTimeout(()=>{worker.terminate();reject(new AppError('A leitura excedeu o tempo limite. A base anterior foi preservada.',422));},60000);
+    worker.once('message',result=>{clearTimeout(timeout);if(result.error)reject(new AppError(result.error,result.status));else resolve(result.rows);});
+    worker.once('error',error=>{clearTimeout(timeout);reject(error);});
+    worker.once('exit',code=>{clearTimeout(timeout);if(code!==0)reject(new AppError('Não foi possível ler a planilha. A base anterior foi preservada.',422));});
+  });
+  return replaceQprof(db,rows,{filename,versao});
+}

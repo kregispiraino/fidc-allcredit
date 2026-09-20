@@ -1,0 +1,20 @@
+.standard-table-filter{position:fixed;z-index:60;max-height:calc(100dvh - 24px);overflow:auto;padding:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.standard-table-filter header{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
+.standard-table-filter p{margin:4px 0 16px;color:var(--muted);font-size:11px}
+.table-filter-rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 24px;align-items:end;gap:8px;margin-bottom:12px}
+.table-filter-rule .form-field{min-width:0}.table-filter-rule .row-icon-action{margin-bottom:5px}
+.standard-table-filter footer{display:flex;justify-content:flex-end;gap:6px;border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+.standard-table-filter footer [data-filter-clear]{margin-right:auto}
+.standard-table-filter :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.table-batch-fields{display:grid;gap:12px}.table-tool[data-table-control="select-all"] span{display:inline}
+@media(max-width:480px){.standard-table-filter{padding:12px}.table-filter-rule{grid-template-columns:minmax(0,1fr) 24px}.table-filter-rule .form-field:first-child{grid-column:1/-1}}
+
+.standard-table-filter .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.standard-table-filter .form-field-wide{grid-column:auto}
+.standard-table-filter .filter-card-actions{display:flex;gap:7px;border-top:1px solid var(--line);padding-top:12px;margin-top:14px}
+.standard-table-filter .filter-card-actions>[data-clear-filters]{margin-right:auto}
+@media(max-width:480px){.standard-table-filter .form-grid{grid-template-columns:1fr}}
+
+.money-filter-hint{grid-column:2;display:block;margin-top:-4px;color:var(--muted);font-size:9px;line-height:1.4}
+
+@media(max-width:480px){.money-filter-hint{grid-column:1/-1}}

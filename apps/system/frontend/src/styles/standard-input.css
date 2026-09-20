@@ -1,0 +1,46 @@
+.standard-number-field,.standard-generated-field{position:relative;display:flex;align-items:center;min-width:0;width:100%;color:var(--muted)}
+.standard-date-field{position:relative;display:flex;align-items:center;width:100%;min-width:0;color:var(--muted)}
+.standard-date-field input[data-date-proxy]{width:100%;min-width:0;padding-right:34px!important;font-variant-numeric:tabular-nums}
+.standard-date-picker{position:absolute;right:4px;display:grid;place-items:center;width:28px;height:28px;padding:5px;border:0;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer}
+.standard-date-picker svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.standard-date-picker:hover:not(:disabled){background:var(--surface-2);color:var(--text)}
+.standard-date-picker:disabled{opacity:.45;cursor:default}
+.standard-date-picker:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+.standard-data-table .data-table{table-layout:auto;width:max-content;min-width:100%}
+.standard-data-table td .cell-main,.standard-data-table td .cell-sub{max-width:none;overflow:visible;text-overflow:clip}
+.standard-data-table td input:not(.standard-input-native){min-width:var(--table-input-width,150px)}
+.standard-data-table td .standard-number-field{min-width:var(--table-input-width,170px)}
+.standard-data-table td .standard-generated-field{min-width:var(--table-input-width,180px)}
+.standard-data-table td .standard-select{min-width:var(--table-input-width,160px)}
+.standard-data-table td .standard-select-trigger>span{white-space:nowrap;overflow:visible;text-overflow:clip}
+.document-pending-file{display:flex;align-items:center;gap:8px;max-width:240px;font-size:11px;color:var(--muted)}
+.document-pending-file>span{min-width:0;flex:1;white-space:normal;overflow-wrap:anywhere}
+.document-pending-file>.row-icon-action{flex-shrink:0}
+.confirmation-simple .confirmation-icon{color:var(--muted);background:var(--surface-2)}
+.confirmation-simple .confirmation-copy strong{color:var(--muted)}
+.confirmation-simple .form-action.destructive{background:var(--surface-2);color:var(--text);border:1px solid var(--line)}
+.confirmation-simple .form-action.destructive:hover{background:var(--sidebar-hover)}
+.standard-number-field input[data-input-proxy],.standard-generated-field>input{width:100%;min-width:0;margin:0;padding-right:35px!important}
+.standard-number-field[data-format="money"] input[data-input-proxy]{padding-left:32px!important;padding-right:10px!important}
+.standard-input-unit{position:absolute;right:12px;font-size:11px;font-weight:500;pointer-events:none}
+.standard-number-field[data-format="money"] .standard-input-unit{left:10px;right:auto}
+input.standard-input-native{position:absolute!important;width:1px!important;min-width:0!important;height:1px!important;padding:0!important;border:0!important;opacity:0!important;pointer-events:none;clip-path:inset(50%)}
+.standard-generate-button{position:absolute;right:5px;width:27px;height:27px;padding:5px;border:0;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center}
+.standard-generate-button svg{width:16px;height:16px}
+.standard-generate-button:hover:not(:disabled){background:var(--surface-2);color:var(--text)}
+.standard-generate-button:disabled{opacity:.4;cursor:default}
+.standard-generate-button:focus-visible{outline:2px solid #8bc1ec;outline-offset:1px}
+textarea.standard-long-text{min-height:36px!important;height:36px!important;max-height:36px!important;resize:none!important;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding-right:30px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%237a8388' stroke-width='1.5'%3E%3Cpath d='m6 8 4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:16px;background-position:right 9px center;cursor:text}
+.standard-text-editor{position:fixed;z-index:1200;display:flex;flex-direction:column;gap:12px;overflow:auto;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);color:var(--text)}
+.standard-text-editor header,.standard-text-editor footer{display:flex;gap:8px;align-items:center}
+.standard-text-editor header strong{font-size:12px;font-weight:600;flex:1;min-width:0;overflow-wrap:anywhere}
+.standard-text-editor textarea{width:100%;min-height:100px;height:150px;resize:none;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--text);font:inherit;font-size:12px;line-height:1.6}
+.standard-text-editor textarea:focus{outline:2px solid #acd1ee;outline-offset:1px}
+.standard-text-editor footer small{margin-right:auto;color:var(--muted);font-size:10px}
+.standard-text-editor footer .form-action{height:30px;min-height:30px;padding:0 10px;font-size:11px}
+.standard-data-table .table-text-preview{display:block;width:220px;max-width:220px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:400;cursor:help}
+.standard-data-table .table-text-preview:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px}
+.standard-data-table td:has(.table-text-preview),.standard-data-table td:has(textarea.standard-long-text){width:244px;max-width:244px}
+.standard-data-table td textarea.standard-long-text{width:220px;min-width:220px;max-width:220px}
+.standard-data-table td[data-column-key="orderNumber"]{min-width:170px}
+.standard-data-table td .standard-generated-field{min-width:146px}

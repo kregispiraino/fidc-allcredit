@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
+  <title>ALLCREDIT · FIDC System</title>
+  <link rel="icon" href="/assets/allcredit-logo.png">
+  <script src="/src/app/theme.js"></script>
+  <link rel="stylesheet" href="/src/styles/askora-base.css"><link rel="stylesheet" href="/src/styles/standard-controls.css"><link rel="stylesheet" href="/src/styles/standard-input.css">
+  <link rel="stylesheet" href="/src/styles/table-filter.css">
+  <link rel="stylesheet" href="/src/styles/allcredit-base.css"><link rel="stylesheet" href="/src/styles/surfaces.css">
+  <link rel="stylesheet" href="/src/styles/application.css">
+  <link rel="stylesheet" href="/src/styles/operation-topline.css">
+  <link rel="stylesheet" href="/src/styles/navigation.css">
+  <link rel="stylesheet" href="/src/styles/scrollbars.css">
+  <link rel="stylesheet" href="/src/features/workflow/rastreio/styles.css">
+  <link rel="stylesheet" href="/src/features/workflow/extrato/styles.css">
+  <link rel="stylesheet" href="/src/features/workflow/saldos/styles.css">
+  <link rel="stylesheet" href="/src/features/importacao/shared/styles.css">
+  <link rel="stylesheet" href="/src/features/dashboards/home/styles.css">
+  <link rel="stylesheet" href="/src/features/sistema/sessao/styles.css">
+</head>
+<body data-authenticated="false">
+  <div id="loginRoot"><div class="login-page" role="status" aria-label="Carregando acesso"></div></div>
+  <a class="skip-link" href="#pageCanvas">Ir para o conteúdo</a>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Menu principal"></aside>
+    <main class="main-content">
+      <header class="topbar" id="topbar"><div class="topbar-content">
+        <nav class="breadcrumbs" aria-label="Localização"><span id="breadcrumbSection">Workflow</span><span aria-hidden="true">›</span><strong id="breadcrumbPage">Extrato</strong></nav>
+        <div class="page-actions" id="pageActions"></div>
+      </div><nav class="header-tabs" id="headerTabs" aria-label="Abas da página"></nav></header>
+      <section class="page-area"><div id="pageCanvas" tabindex="-1"></div></section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/app/main.js"></script>
+</body>
+</html>

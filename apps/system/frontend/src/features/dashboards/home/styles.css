@@ -1,0 +1,2 @@
+.placeholder-dashboard{min-height:420px;border:1px dashed var(--line);border-radius:12px;background:var(--surface);display:grid;place-items:center;text-align:center;padding:30px}.placeholder-dashboard strong{display:block;font-size:14px}.placeholder-dashboard span{display:block;margin-top:7px;color:var(--muted);font-size:10px;max-width:520px;line-height:1.6}
+.placeholder-dashboard .placeholder-symbol{font-size:34px;margin:0 auto 16px;color:var(--accent)}.placeholder-dashboard .soft-badge{display:inline-block;margin-top:18px}

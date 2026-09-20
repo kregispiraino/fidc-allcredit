@@ -1,0 +1,27 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+test-results/
+playwright-report/
+coverage/
+database/backups/
+database/relatorios/
+Import_template/
+local/
+excluir_quando_subir.md
+# Histórico pontual da importação real, preservado somente neste workspace.
+database/importacoes/
+tests/migracao-real.test.js
+tests/rastreio-manual.test.js
+docs/migracao-conciliacao.md
+docs/migracao-rastreio.md
+docs/revisao-rastreio.md
