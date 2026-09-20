@@ -17,15 +17,18 @@ test('produção exige HTTPS e arquivo persistente; Railway exige volume correto
   assert.throws(()=>runtimeConfig({...env,RAILWAY_ENVIRONMENT_ID:'teste',RAILWAY_VOLUME_MOUNT_PATH:'/outro'}),/dentro/);
   assert.equal(runtimeConfig({...env,APP_ORIGIN:'',RAILWAY_PUBLIC_DOMAIN:'fidc.up.railway.app'}).origin,'https://fidc.up.railway.app');
   assert.throws(()=>runtimeConfig({...env,TRUST_PROXY:'true'}),/TRUST_PROXY/);
+  for(const value of ['http://outro.example.com','https://outro.example.com/path','https://user:pass@outro.example.com'])assert.throws(()=>runtimeConfig({...env,APP_ADDITIONAL_ORIGINS:value}),/APP_ADDITIONAL_ORIGINS/);
 });
 test('Railway: health público sem dados, cookie Secure, origem validada e CSP',async t=>{
   const db=openDatabase(':memory:');migrate(db);saveAccess(db,null,{login:'operador',senha:'senha-de-teste',acesso:'operador'});
-  const server=createApp(db,{env}).listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));t.after(async()=>{await new Promise(r=>server.close(r));db.close();});
+  const server=createApp(db,{env:{...env,APP_ADDITIONAL_ORIGINS:'https://fidc.up.railway.app'}}).listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));t.after(async()=>{await new Promise(r=>server.close(r));db.close();});
   const base=`http://127.0.0.1:${server.address().port}`;
   const health=await fetch(`${base}/healthz`);assert.equal(health.status,200);assert.deepEqual(await health.json(),{status:'ok'});
   assert.equal((await fetch(`${base}/api/workflow/extrato`)).status,401);
   const send=origin=>fetch(`${base}/api/sistema/sessao/entrar`,{method:'POST',headers:{Origin:origin,'X-Forwarded-Proto':'https','Content-Type':'application/json'},body:JSON.stringify({login:'operador',senha:'senha-de-teste'})});
   assert.equal((await send('https://outro.example.com')).status,403);
+  assert.equal((await send('https://fidc.up.railway.app')).status,200);
+  assert.equal((await send('https://fidc.up.railway.app.evil.example')).status,403);
   const login=await send(env.APP_ORIGIN);assert.equal(login.status,200);assert.match(login.headers.get('set-cookie'),/Secure/);assert.match(login.headers.get('set-cookie'),/HttpOnly/);
   const page=await fetch(base);assert.match(page.headers.get('content-security-policy'),/frame-ancestors 'none'/);assert.doesNotMatch(await page.text(),/<script>(?!<)/);
   assert.equal((await fetch(`${base}/database/allcredit.sqlite`)).status,404);

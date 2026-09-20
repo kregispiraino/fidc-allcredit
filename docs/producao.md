@@ -13,6 +13,7 @@ No Railway, conecte o repositório, crie um volume no serviço montado em `/data
 | `PORT` | Fornecido pelo Railway; padrão local da imagem `4310` |
 | `ALLCREDIT_DB` | `/data/allcredit.sqlite` |
 | `APP_ORIGIN` | URL HTTPS sem caminho, como `https://fidc.seudominio.com`; opcional quando `RAILWAY_PUBLIC_DOMAIN` está disponível |
+| `APP_ADDITIONAL_ORIGINS` | Opcional: outras origens HTTPS autorizadas, separadas por vírgula, para manter domínio próprio e endereço Railway funcionando simultaneamente |
 | `TRUST_PROXY` | `1`, para o proxy do Railway |
 
 O início falha se a configuração de produção não tiver origem HTTPS ou caminho absoluto de banco. No Railway também exige volume conectado e banco dentro dele, evitando gravar acidentalmente no filesystem descartável.
