@@ -42,4 +42,10 @@
 
 .title-selection-summary { display:flex; flex-wrap:wrap; gap:8px 24px; padding:12px 20px; border-bottom:1px solid var(--border); font-size:13px; }
 #trackingTitleSearch { width:min(300px,100%); }
+.standard-data-table.pendencias-table .data-table{width:100%;min-width:1120px;table-layout:fixed}
+.pendencias-table .data-table th,.pendencias-table .data-table td{padding:8px;white-space:normal;overflow-wrap:anywhere;line-height:1.45}
+.pendencias-table .data-table .row-actions-column{width:94px;min-width:94px}
+.pendencias-table .data-table td.money{white-space:nowrap;min-width:0}
+.pendencias-table .data-table .cell-sub{white-space:normal}
+.pendencias-table .data-table .status-pill{max-width:100%;white-space:normal}
 .title-tabs { flex-wrap:wrap; }

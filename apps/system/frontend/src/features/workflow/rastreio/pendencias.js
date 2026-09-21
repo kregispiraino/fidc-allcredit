@@ -43,11 +43,15 @@ export function renderPendencias(ctx){
     {key:'saldo_calculado',label:'Saldo na conciliação',type:'number',format:'money',display:r=>amount(r.saldo_calculado),filterValue:r=>r.saldo_calculado==null?null:r.saldo_calculado/100},
     {key:'situacao',label:'Situação',type:'select',options:Object.entries(situations).map(([value,label])=>({value,label})),render:r=>`<span class="status-pill ${r.pendente?'pending':'reconciled'}">${esc(situations[r.situacao])}</span><span class="cell-sub">${esc(r.revisado_em?'Revisado':r.status_origem||'Condição original não informada')}</span>`},
     {key:'codigos_credito',label:'Entrada / crédito',type:'text'},{key:'codigos_debito',label:'Saída / débito',type:'text'}];
+  const widths=[66,104,170,190,140,164,148,148];
+  fields.forEach((field,index)=>{field.width=widths[index];field.minWidth=0;});
   renderListing(ctx,{state,rows,fields,kind:'workflow-rastreio-pendencias',showNew:false,showEdit:false,showDuplicate:false,
     rowActions:r=>`<button type="button" class="text-link" data-control-record="${r.id}">Ver percurso</button>${ctx.canWrite===false?'':`<button type="button" class="text-link" data-control-exit="${r.id}">Compor saída</button>`}`,
     exportRow:r=>({Tipo:itemLabel(r.tipo),Título:r.titulo,Cedente:r.cedente,Sacado:r.sacado,Saldo:r.saldo_calculado==null?'':(r.saldo_calculado/100).toFixed(2),Situação:situations[r.situacao],'Condição original':r.status_origem||'',Crédito:r.codigos_credito,Débito:r.codigos_debito})});
-  ctx.root.querySelector('.standard-data-table').dataset.scrollMode='page';
+  const table=ctx.root.querySelector('.standard-data-table');
+  table.dataset.scrollMode='page';table.classList.add('pendencias-table','stable-table-layout');
   ctx.root.querySelectorAll('[data-control-record]').forEach(button=>button.onclick=()=>showControlRecord(ctx,Number(button.dataset.controlRecord)));
   ctx.root.querySelectorAll('[data-control-exit]').forEach(button=>button.onclick=()=>composeExit(ctx,rows.find(r=>r.id===Number(button.dataset.controlExit))));
-  return [['Aguardam saída',rows.length]];
+  const total=rows.reduce((sum,row)=>sum+(row.saldo_calculado??0),0),unknown=rows.filter(row=>row.saldo_calculado==null).length;
+  return [['Aguardam saída',rows.length],['Valor total pendente',`${money(total)}${unknown?` + ${unknown} sem valor informado`:''}`]];
 }
