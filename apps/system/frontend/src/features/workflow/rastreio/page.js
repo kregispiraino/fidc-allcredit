@@ -10,4 +10,4 @@ function render(ctx) {
   ctx.root.insertAdjacentHTML('afterbegin',renderMultiViewTopline({tabs:pageDefinition(ctx.state).tabs,activeKey:ctx.state.tab,stats,label:'Rastreio'}));
   ctx.root.querySelectorAll('[data-page-tab]').forEach(button=>button.onclick=()=>ctx.navigate('workflow','rastreio',button.dataset.pageTab));
 }
-export default {load:loadRastreio,render};
+export default {load:loadRastreio,render,refreshOnTab:true};

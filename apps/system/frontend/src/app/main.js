@@ -50,7 +50,7 @@ async function route() {
     if(!leave){history.replaceState(null,'',routeHash(state));return;}
   }
   Object.assign(state,next);history.replaceState(null,'',routeHash(state));
-  if(loadedPage===pageKey(state)&&data){render();return;}
+  if(loadedPage===pageKey(state)&&data){render();if(pages[pageKey(state)].refreshOnTab)await refresh().catch(showLoadError);return;}
   data=null;render();await refresh().catch(showLoadError);
 }
 window.addEventListener('hashchange',route);

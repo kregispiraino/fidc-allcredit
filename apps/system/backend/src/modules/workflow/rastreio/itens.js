@@ -1,4 +1,4 @@
-import { itemTypes, ensureControlRecord } from './registros.js';
+import { itemTypes, ensureControlRecord, titleRegistry } from './registros.js';
 import { assert, positiveId } from '../../../shared/errors.js';
 import { parseCents } from '../../../shared/money.js';
 
@@ -20,7 +20,7 @@ export function validateItems(db,items,transferId=null) {
     assert(!registroId||registro,'Registro de rastreio não encontrado.');
     const sourceId=item.qprof_titulo_id==null?null:positiveId(item.qprof_titulo_id);
     const source=sourceId?db.prepare('SELECT * FROM importacao_qprof_titulos WHERE id=?').get(sourceId):null;
-    assert(!sourceId||source,'A base Qprof mudou. Remova o título do rascunho e busque novamente.',409);
+    assert(!sourceId||(source&&(source.ativo||existing?.qprof_titulo_id===sourceId)),'A base Qprof mudou. Remova o título do rascunho e busque novamente.',409);
     const row={id,registro_id:registroId,qprof_titulo_id:sourceId,tipo:item.tipo||registro?.tipo||'titulo',titulo:item.titulo??registro?.titulo??source?.numero??'',cedente:item.cedente??registro?.cedente??source?.cedente??'',sacado:item.sacado??registro?.sacado??source?.sacado??''};
     const metadata=existing||registro||source;
     row.data_liquidacao=metadata?.data_liquidacao??null;row.carteira=metadata?.carteira??'';row.carteira_interna=metadata?.carteira_interna??'';
@@ -38,8 +38,9 @@ export function saveItems(db,transferId,items) {
   for(const row of db.prepare('SELECT id FROM workflow_rastreio_itens WHERE transferencia_id=?').all(transferId)){
     if(!wanted.has(row.id))db.prepare('DELETE FROM workflow_rastreio_itens WHERE id=?').run(row.id);
   }
+  const registry=titleRegistry(db);
   for(const item of items){
-    const values=[item.qprof_titulo_id,item.tipo,item.titulo,item.cedente,item.sacado,item.valor,item.data_liquidacao,item.carteira,item.carteira_interna,ensureControlRecord(db,item)];
+    const values=[item.qprof_titulo_id,item.tipo,item.titulo,item.cedente,item.sacado,item.valor,item.data_liquidacao,item.carteira,item.carteira_interna,ensureControlRecord(db,item,registry)];
     if(item.id)db.prepare('UPDATE workflow_rastreio_itens SET qprof_titulo_id=?,tipo=?,titulo=?,cedente=?,sacado=?,valor=?,data_liquidacao=?,carteira=?,carteira_interna=?,registro_id=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND transferencia_id=?').run(...values,item.id,transferId);
     else db.prepare('INSERT INTO workflow_rastreio_itens(qprof_titulo_id,tipo,titulo,cedente,sacado,valor,data_liquidacao,carteira,carteira_interna,registro_id,transferencia_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)').run(...values,transferId);
   }

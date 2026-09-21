@@ -10,7 +10,7 @@
     "dev": "node --watch apps/system/backend/src/server.js",
     "db:migrate": "node database/migrate.js",
     "db:seed": "node database/seed.js",
-    "test": "node --test tests/acessos.test.js tests/workflow.test.js tests/migrations.test.js tests/architecture.test.js tests/saldos.test.js tests/importacao-extratos.test.js tests/importacao-qprof.test.js tests/extrato-spreadsheet.test.js tests/production.test.js",
+    "test": "node --test tests/acessos.test.js tests/workflow.test.js tests/pendencias-identidade.test.js tests/migrations.test.js tests/architecture.test.js tests/saldos.test.js tests/importacao-extratos.test.js tests/importacao-qprof.test.js tests/extrato-spreadsheet.test.js tests/production.test.js",
     "test:ui": "node --test tests/ui.test.js",
     "start:env": "node --env-file-if-exists=.env apps/system/backend/src/server.js",
     "access:create": "node scripts/create-access.js",

@@ -35,7 +35,7 @@ export function searchQprof(db,{q='',filters={},page=1}={},pageSize=15){
   }
   const versao=qprofBase(db).versao;
   if(!clauses.length)return {items:[],total:0,page:1,pages:1,versao,requiresFilter:true};
-  const where=clauses.join(' AND '),total=db.prepare(`SELECT count(*) total FROM importacao_qprof_titulos WHERE ${where}`).get(...params).total;
+  const where='ativo=1 AND '+clauses.join(' AND '),total=db.prepare(`SELECT count(*) total FROM importacao_qprof_titulos WHERE ${where}`).get(...params).total;
   const pages=Math.max(1,Math.ceil(total/pageSize));page=Math.min(page,pages);
   const items=db.prepare(`SELECT id,numero,cedente,sacado,valor,data_liquidacao,carteira,carteira_interna FROM importacao_qprof_titulos WHERE ${where} ORDER BY data_liquidacao DESC,id LIMIT ? OFFSET ?`).all(...params,pageSize,(page-1)*pageSize);
   return {items,total,page,pages,versao,requiresFilter:false};

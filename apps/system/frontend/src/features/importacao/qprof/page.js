@@ -3,9 +3,9 @@ import { fileContent } from '../shared/file.js';
 import { loadQprof, importQprof } from './api.js';
 function render(ctx){
   const state=ctx.pageState.upload??={file:null,busy:false,error:null,result:null};
-  renderImportSources(ctx,[{key:'qprof',title:'Títulos · Qprof',description:`${ctx.data.quantidade.toLocaleString('pt-BR')} títulos na base de consulta`,accept:'.xlsx,.xls',
+  renderImportSources(ctx,[{key:'qprof',title:'Títulos · Qprof',description:`${ctx.data.quantidade.toLocaleString('pt-BR')} títulos na base de consulta`,accept:'.csv,.xlsx,.xls',
     dropLabel:'Arraste a planilha de títulos aqui',submitLabel:'Atualizar títulos',lastImport:ctx.data.updated_at,
-    helpText:'Atualizar títulos substitui toda a base de consulta. As composições salvas são preservadas.',
+    helpText:'Atualizar títulos renova a base de consulta e reutiliza os títulos existentes. As composições salvas são preservadas.',
     ...state,resultSummary:state.result?`${state.result.quantidade.toLocaleString('pt-BR')} títulos na nova base`:'',resultDetail:'Base atualizada para consulta no Rastreio. As composições salvas foram preservadas.'}]);
   if(ctx.canWrite===false)return;
   const card=ctx.root.querySelector('[data-import-source]'),input=card.querySelector('[type=file]'),drop=card.querySelector('.dropzone');
@@ -13,7 +13,7 @@ function render(ctx){
     if(state.busy||!files.length)return;
     state.file=null;state.error=null;state.result=null;
     if(files.length!==1)state.error='Selecione uma única planilha.';
-    else if(!/\.xlsx?$/i.test(files[0].name)||!files[0].size||files[0].size>25*1024*1024)state.error='Envie uma planilha .xlsx ou .xls de até 25 MB.';
+    else if(!/\.(xlsx?|csv)$/i.test(files[0].name)||!files[0].size||files[0].size>25*1024*1024)state.error='Envie um arquivo .csv, .xlsx ou .xls de até 25 MB.';
     else state.file=files[0];
     ctx.render();
   };

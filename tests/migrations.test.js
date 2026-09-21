@@ -32,7 +32,7 @@ test('migração por seção/página preserva um ciclo já confirmado e sua audi
   const plain=rows=>rows.map(row=>({...row}));
   migrate(db);migrate(db);
   assert.deepEqual(plain(db.prepare('SELECT * FROM workflow_extrato ORDER BY id').all()),strip(before.entries).map(row=>({...row,valor_subcentavos:0,rastreio_condicao:'aplicavel'})));
-  assert.deepEqual(plain(db.prepare('SELECT * FROM importacao_qprof_titulos ORDER BY id').all()),strip(before.titles).map(({documento,vencimento,pagamento,...row})=>({...row,cedente:'',data_liquidacao:pagamento,carteira:'',carteira_interna:''})));
+  assert.deepEqual(plain(db.prepare('SELECT * FROM importacao_qprof_titulos ORDER BY id').all()),strip(before.titles).map(({documento,vencimento,pagamento,...row})=>({...row,cedente:'',data_liquidacao:pagamento,carteira:'',carteira_interna:'',ativo:1})));
   assert.deepEqual(plain(db.prepare('SELECT * FROM gerenciador_contas').all()),plain(before.accounts).map(row=>({...row,funcao:'operacional'})));
   assert.equal(db.prepare("SELECT name FROM sqlite_master WHERE name='gerenciador_contas_configuracoes'").get(),undefined);
   assert.equal(db.prepare('SELECT saldo_sistema FROM workflow_saldos WHERE conta_id=2').get().saldo_sistema,0);

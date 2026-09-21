@@ -39,3 +39,7 @@
 
 
 .composition-actions{flex-wrap:wrap;justify-content:flex-end}
+
+.title-selection-summary { display:flex; flex-wrap:wrap; gap:8px 24px; padding:12px 20px; border-bottom:1px solid var(--border); font-size:13px; }
+#trackingTitleSearch { width:min(300px,100%); }
+.title-tabs { flex-wrap:wrap; }

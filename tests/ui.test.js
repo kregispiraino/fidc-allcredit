@@ -867,11 +867,36 @@ test('importações sintéticas por arraste exigem confirmação e preservam sep
   await page.locator('.import-card').dispatchEvent('drop',{dataTransfer:transfer});await transfer.dispose();
   assert.equal(db.prepare('SELECT count(*) n FROM importacao_qprof_titulos').get().n,14);
   await page.locator('[data-import-submit]').click();await page.locator('.import-success').waitFor();
-  assert.equal(db.prepare('SELECT count(*) n FROM importacao_qprof_titulos').get().n,40);assert.equal(db.prepare('SELECT count(*) n FROM workflow_extrato').get().n,count);
+  assert.equal(db.prepare('SELECT count(*) n FROM importacao_qprof_titulos WHERE ativo=1').get().n,40);assert.equal(db.prepare('SELECT count(*) n FROM workflow_extrato').get().n,count);
   await navigate(page,'importacao/extratos');const card=page.locator('[data-import-source="singulare-89727720"]');await card.waitFor();
   const csv=singulareFile();await card.locator('[type=file]').setInputFiles({name:csv.filename,mimeType:'text/csv',buffer:csv.buffer});
   await card.locator('[data-import-start]').fill('2026-09-17');await card.locator('[data-import-end]').fill('2026-09-18');
   assert.equal(db.prepare('SELECT count(*) n FROM workflow_extrato').get().n,count);
   await card.locator('[data-import-submit]').click();await card.locator('.import-success').waitFor();
   assert.equal(db.prepare('SELECT count(*) n FROM workflow_extrato').get().n,count+2);
+});
+
+test('Todas as pendências usa saldo do domínio e soma seleção antes de salvar; busca mostra todas as transferências',async t=>{
+  const {page,db}=await fixture(t);
+  const movement=value=>saveExtratoRows(db,[{data:'2026-09-21',historico:'Teste busca de títulos',valor_reais:value,conta_id:2}])[0];
+  const entry=confirmTransfer(db,{extrato_id:movement('100.00').id,itens:[{tipo:'titulo',titulo:'BUSCA-001',cedente:'Teste',valor_reais:'100.00'}]});
+  const partial=confirmTransfer(db,{extrato_id:movement('-70.00').id,itens:[{tipo:'parcial',titulo:'BUSCA001',cedente:'Teste',valor_reais:'70.00'}]});
+  const third=confirmTransfer(db,{extrato_id:movement('-10.00').id,itens:[{tipo:'parcial',titulo:'BUSCA-001',cedente:'Teste',valor_reais:'10.00'}]});
+  movement('-20.00');
+  await navigate(page,'workflow/rastreio/liquidacao');
+  await page.locator('[data-title-tab="pendencias"]').click();
+  await page.locator('#titleSearch').fill('BUSCA');
+  const pending=page.locator('[data-pending-title]');await pending.waitFor();
+  assert.equal(await pending.count(),1);assert.match(await page.locator('.title-table tbody').innerText(),/20,00/);
+  await pending.click();assert.equal(await page.locator('[data-selected-count]').innerText(),'1');assert.match(await page.locator('[data-selected-total]').innerText(),/20,00/);
+  assert.equal(db.prepare('SELECT count(*) n FROM workflow_rastreio_itens WHERE registro_id=?').get(entry.itens[0].registro_id).n,3,'seleção ainda não grava vínculos');
+  await page.locator('[data-composition-cancel]').click();await page.getByRole('button',{name:'Descartar',exact:true}).click();
+  await navigate(page,'workflow/rastreio/rastreio');await page.locator('#trackingTitleSearch').fill('busca 001');
+  assert.equal(await page.locator('[data-transfer]').count(),3);
+  for(const transfer of [entry,partial,third])assert.match(await page.locator('.transfer-list').innerText(),new RegExp(transfer.codigo));
+  await page.screenshot({path:'test-results/rastreio-busca-titulo.png',fullPage:true});
+  const last=confirmTransfer(db,{extrato_id:movement('-20.00').id,itens:[{tipo:'titulo',titulo:'BUSCA-001',cedente:'Teste',valor_reais:'20.00'}]});
+  await navigate(page,'workflow/rastreio/pendencias');
+  await page.waitForFunction(()=>!document.querySelector('.standard-data-table')?.textContent.includes('BUSCA-001'));
+  assert.ok(last.id);
 });

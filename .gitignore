@@ -25,3 +25,6 @@ tests/rastreio-manual.test.js
 docs/migracao-conciliacao.md
 docs/migracao-rastreio.md
 docs/revisao-rastreio.md
+
+# Arquivos reais fornecidos para validação ficam somente no workspace.
+tests/QPROF*.csv

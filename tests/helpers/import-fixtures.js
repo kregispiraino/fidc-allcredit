@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx';
 // Fictional data generated in memory: no customer statements or spreadsheets in Git.
 export function qprofFile(){
   const headers=['Cedente','Sacado','S. Núm.','Vlr. Pago','Dta. Liq.','Carteira','Cart. Interna'];
-  const rows=Array.from({length:40},(_,i)=>['Empresa Exemplo',`Cliente Exemplo ${i+1}`,i===39?'FIC-0001':`FIC-${String(i+1).padStart(4,'0')}`,i===0?1234.56:100+i,'10/09/2026','CARTEIRA-DEMO','TÍTULOS FATURIZADOS']);
+  const rows=Array.from({length:40},(_,i)=>[i===39?'Outra Empresa Exemplo':'Empresa Exemplo',`Cliente Exemplo ${i+1}`,i===39?'FIC-0001':`FIC-${String(i+1).padStart(4,'0')}`,i===0?1234.56:100+i,'10/09/2026','CARTEIRA-DEMO','TÍTULOS FATURIZADOS']);
   const book=XLSX.utils.book_new();XLSX.utils.book_append_sheet(book,XLSX.utils.aoa_to_sheet([headers,...rows]),'Titulos');return XLSX.write(book,{type:'buffer',bookType:'xlsx'});
 }
 export function multiSheetFile(){

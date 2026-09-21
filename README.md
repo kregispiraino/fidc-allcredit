@@ -1,6 +1,6 @@
 # ALLCREDIT · FIDC System
 
-Sistema de operações financeiras com Extrato, Rastreio, Saldos, importação de extratos bancários e base de títulos Qprof.
+Sistema de operações financeiras com Extrato, Rastreio, Saldos, importação de extratos bancários e base de títulos Qprof (CSV, XLS e XLSX).
 
 | Seção | Páginas |
 | --- | --- |

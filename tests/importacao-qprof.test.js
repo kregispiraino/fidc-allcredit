@@ -37,25 +37,25 @@ test('planilha incompleta ou inválida é rejeitada inteira com identificação 
   assert.throws(()=>parseQprof(XLSX.write(errorBook,{type:'buffer',bookType:'xlsx'})),/Linha 2.*erro/);
   assert.throws(()=>parseQprof(multiSheetFile()),/única aba/);
 });
-test('substituição integral não altera Extrato nem Saldos, aceita números repetidos e não reutiliza IDs',t=>{
+test('atualização da base ativa preserva Extrato, Saldos e IDs e distingue cedentes',t=>{
   const db=fixture(t),entries=db.prepare('SELECT * FROM workflow_extrato').all(),balances=db.prepare('SELECT * FROM workflow_saldos').all();
-  replaceQprof(db,sample,metadata(db));const firstIds=db.prepare('SELECT id FROM importacao_qprof_titulos').all().map(r=>r.id);
+  replaceQprof(db,sample,metadata(db));const firstIds=db.prepare('SELECT id FROM importacao_qprof_titulos WHERE ativo=1 ORDER BY id').all().map(r=>r.id);
   assert.equal(qprofBase(db).quantidade,40);assert.equal(qprofBase(db).versao,1);
   replaceQprof(db,sample.slice(0,2),metadata(db));assert.equal(qprofBase(db).quantidade,2);
-  assert.ok(db.prepare('SELECT min(id) id FROM importacao_qprof_titulos').get().id>Math.max(...firstIds));
+  assert.deepEqual(db.prepare('SELECT id FROM importacao_qprof_titulos WHERE ativo=1 ORDER BY id').all().map(r=>r.id),firstIds.slice(0,2));
   assert.deepEqual(db.prepare('SELECT * FROM workflow_extrato').all(),entries);assert.deepEqual(db.prepare('SELECT * FROM workflow_saldos').all(),balances);
   assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
 });
 test('salvar vínculo captura sete campos; substituir base preserva snapshot, edição e proteção de rascunhos antigos',t=>{
   const db=fixture(t);replaceQprof(db,[{...sample[0],valor:1894000}],metadata(db));
-  const source=db.prepare('SELECT * FROM importacao_qprof_titulos').get();
+  const source=db.prepare('SELECT * FROM importacao_qprof_titulos WHERE ativo=1').get();
   const saved=confirmTransfer(db,{extrato_id:3,itens:[{qprof_titulo_id:source.id}]});
   for(const key of ['data_liquidacao','carteira','carteira_interna'])assert.equal(saved.itens[0][key],source[key]);
   replaceQprof(db,sample,metadata(db));
   const after=db.prepare('SELECT * FROM workflow_rastreio_itens WHERE transferencia_id=?').get(saved.id);
-  assert.equal(after.qprof_titulo_id,null);assert.equal(after.carteira,source.carteira);assert.equal(after.valor,1894000);
+  assert.equal(after.qprof_titulo_id,source.id);assert.equal(after.carteira,source.carteira);assert.equal(after.valor,1894000);
   assert.throws(()=>updateTransfer(db,saved.id,{versao:saved.versao,itens:[]}),/mudou/);
-  assert.throws(()=>confirmTransfer(db,{extrato_id:1,itens:[{qprof_titulo_id:source.id,valor_reais:'48325.70'}]}),/base Qprof mudou/);
+  assert.equal(db.prepare('SELECT id FROM importacao_qprof_titulos WHERE id=?').get(source.id).id,source.id);
   const edited=updateTransfer(db,saved.id,{versao:saved.versao+1,itens:[{id:after.id,tipo:'parcial',titulo:after.titulo,cedente:'Editado',sacado:after.sacado,valor_reais:'18940.00'}]});
   assert.equal(edited.itens[0].carteira_interna,source.carteira_interna);assert.equal(edited.itens[0].data_liquidacao,source.data_liquidacao);
 });

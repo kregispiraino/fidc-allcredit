@@ -1,3 +1,4 @@
+import { pendingSelected, togglePending, matchingTransfers } from './pending-selection.js';
 import { associateMovement } from './associacao.js';
 import { showControlRecord } from './pendencias.js';
 import { compositionSelection, bindCompositionSelection } from './composition-selection.js';
@@ -14,7 +15,8 @@ import { compositionView } from './composition-view.js';
 export function renderComposition(ctx) {
   const {tab,review,work,entries,transfers,accounts}=compositionState(ctx);
   const pendingFields=[{key:'historico',label:'Histórico',type:'text'},{key:'data',label:'Data',type:'date'},{key:'valor',label:'Valor',type:'number',format:'money',filterValue:row=>Math.abs(row.valor)/100}];
-  const pending=filterTableRows(entries,pendingFields,work.pendingFilters);
+  const matches=review&&work.transferQuery?.trim()?matchingTransfers(ctx.data.itens,work.transferQuery):null;
+  const pending=filterTableRows(entries,pendingFields,review?{}:work.pendingFilters).filter(entry=>!matches||matches.has(transfers.get(entry.id)?.id));
   const selected=pending.find(entry=>entry.id===work.selected)||pending[0];work.selected=selected?.id??null;
   const transfer=transfers.get(selected?.id),draft=draftFor(ctx,work,selected,transfer);
   const total=draft.itens.reduce((sum,item)=>sum+(item.efeito==='compensacao'?0:item.valor),0),difference=selected?Math.abs(selected.valor)-total:0;
@@ -29,7 +31,8 @@ export function renderComposition(ctx) {
     {key:'carteira',label:'Carteira',type:'select',options:portfolioOptions('carteira')},{key:'carteira_interna',label:'Carteira interna',type:'select',options:portfolioOptions('carteira_interna')}];
   const search=work.titleTab==='todos'?titleSearch(ctx,work):null;
   const sourceRows=(search?.items||[]).map(source=>({...source,_source:source.id,tipo:'titulo',titulo:source.numero}));
-  const rows=search?sourceRows:filterTableRows(draft.itens,fields,work.filters).filter(row=>normalize(`${row.titulo} ${row.cedente} ${row.sacado} ${row.valor/100} ${money(row.valor)}`).includes(normalize(work.query)));
+  const pendingRows=(ctx.data.registros||[]).filter(row=>row.aguarda_saida).map(row=>({...row,_pending:row.id,registro_id:row.id,valor:row.saldo_calculado}));
+  const rows=search?sourceRows:filterTableRows(work.titleTab==='pendencias'?pendingRows:draft.itens,fields,work.filters).filter(row=>normalize(`${row.titulo} ${row.cedente} ${row.sacado} ${row.valor/100} ${money(row.valor)}`).includes(normalize(work.query)));
   const pages=search?.pages??Math.max(1,Math.ceil(rows.length/15));if(!search)work.page=Math.min(work.page,pages);
   const old=ctx.root.querySelector('.rastreio-shell');
   const scroll=old?.dataset.compositionView===tab?{list:old.querySelector('.transfer-list').scrollTop,
@@ -47,11 +50,18 @@ export function renderComposition(ctx) {
   bindTableFilter({...ctx,root:ctx.root.querySelector('.composition-panel')},{fields,values:work.filters,onApply:values=>{work.filters=values;work.page=1;ctx.render();}});
   ctx.root.querySelectorAll('[data-transfer]').forEach(button=>button.onclick=()=>{cancelCompositionEdit(work,draft);if(!draft.dirty)draft.reviewEditing=false;work.selected=button.dataset.transfer.startsWith('tr-')?button.dataset.transfer:Number(button.dataset.transfer);work.editing=false;work.page=1;ctx.render();});
   ctx.root.querySelectorAll('[data-title-tab]').forEach(button=>button.onclick=()=>{cancelCompositionEdit(work,draft);switchTitleTab(work,button.dataset.titleTab);work.editing=false;ctx.render();});
+  ctx.root.querySelector('#trackingTitleSearch')?.addEventListener('input',event=>{work.transferQuery=event.target.value;ctx.render();});
+  ctx.root.querySelectorAll('[data-pending-title]').forEach(button=>button.onclick=()=>{
+    if(!canEdit||!selected)return;
+    const row=pendingRows.find(row=>row.id===Number(button.dataset.pendingTitle));
+    if(!pendingSelected(draft,row)&&draft.itens.length>=2000){notify('A composição aceita até 2.000 itens.');return;}
+    togglePending(draft,[row],!!pendingSelected(draft,row));ctx.render();
+  });
   ctx.root.querySelectorAll('[data-title]').forEach(button=>button.onclick=()=>{
     if(!canEdit||!selected||work.selecting)return;
     const id=Number(button.dataset.title),linked=draft.itens.some(item=>item.qprof_titulo_id===id);
     if(linked)draft.itens=draft.itens.filter(item=>item.qprof_titulo_id!==id);
-    else draft.itens.push(sourceItem(search.items.find(source=>source.id===id)));
+    else {if(draft.itens.length>=2000){notify('A composição aceita até 2.000 itens.');return;}draft.itens.push(sourceItem(search.items.find(source=>source.id===id)));}
     changed();
   });
   ctx.root.querySelector('[data-item-new]').onclick=()=>{
